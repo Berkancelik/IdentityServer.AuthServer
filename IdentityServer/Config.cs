@@ -33,5 +33,28 @@ namespace IdentityServer.AuthServer
             };
         }
 
+        public static IEnumerable<Client> GetClient()
+        {
+            return new List<Client>(){
+                new Client()
+                {
+                    ClientId = "Client1",//Sha256 : hashlenmiş bir şekidle tutmamız gerekmektedir.
+                    ClientName="Client 1 api uygulaması",
+                    ClientSecrets = new[]{new Secret("secret".Sha256())},
+                AllowedGrantTypes=GrantTypes.ClientCredentials,
+                AllowedScopes={"api1.read","api2.write", "api2.update" }
+                },
+                new Client()
+                {
+                    ClientId = "Client2",//Sha256 : hashlenmiş bir şekidle tutmamız gerekmektedir.
+                    ClientName="Client 2 app uygulaması",
+                    ClientSecrets = new[]{new Secret("secret".Sha256())},
+                AllowedGrantTypes=GrantTypes.ClientCredentials,
+                AllowedScopes={"api1.read","api2.write", "api2.update" }
+                }
+            };
+        }
     }
+
 }
+
