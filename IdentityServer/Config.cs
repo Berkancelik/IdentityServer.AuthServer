@@ -33,7 +33,7 @@ namespace IdentityServer.AuthServer
             };
         }
 
-        public static IEnumerable<Client> GetClient()
+        public static IEnumerable<Client> GetClients()
         {
             return new List<Client>(){
                 new Client()
