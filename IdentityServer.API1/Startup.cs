@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -26,6 +27,13 @@ namespace IdentityServer.API1
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            //Authentication instance tutmaktadýr. Yani Þema Yaþpýsýný tanýmlamaktadýr.
+            // Best Practics=>
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, opts =>
+            {
+                opts.Authority = "https://localhost:5001";
+                opts.Audience = "resource_api1";
+            });
 
             services.AddControllers();
             services.AddSwaggerGen(c =>
@@ -49,6 +57,7 @@ namespace IdentityServer.API1
             app.UseRouting();
 
             app.UseAuthorization();
+            app.UseAuthentication();
 
             app.UseEndpoints(endpoints =>
             {
