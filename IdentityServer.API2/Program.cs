@@ -21,6 +21,6 @@ namespace IdentityServer.API2
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();
-                });
+                }); 
     }
 }
