@@ -26,6 +26,7 @@ namespace IdentityServer.API1
 
         public void ConfigureServices(IServiceCollection services)
         {
+
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, opts =>
             {
                 opts.Authority = "https://localhost:5001";
@@ -51,9 +52,9 @@ namespace IdentityServer.API1
             app.UseHttpsRedirection();
 
             app.UseRouting();
+            app.UseAuthentication();
 
             app.UseAuthorization();
-            app.UseAuthentication();
 
             app.UseEndpoints(endpoints =>
             {
