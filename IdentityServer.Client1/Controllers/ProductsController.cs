@@ -1,22 +1,26 @@
 ﻿using IdentityModel.Client;
+using IdentityServer.Client1.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
+using Newtonsoft.Json;
+using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
 
 namespace IdentityServer.Client1.Controllers
 {
-    public class ProdcutsController : Controller
+    public class ProductsController : Controller
     {
         private readonly IConfiguration _configuration;
 
-        public ProdcutsController(IConfiguration configuration)
+        public ProductsController(IConfiguration configuration)
         {
             _configuration = configuration;
         }
 
         public async Task<IActionResult> Index()
         {
+            List<Product> products = new List<Product>();
             HttpClient httpClient = new HttpClient();
 
             var disco = await httpClient.GetDiscoveryDocumentAsync("https://localhost:5001");
@@ -45,13 +49,15 @@ namespace IdentityServer.Client1.Controllers
             if (response.IsSuccessStatusCode)
             {
                 var contet = await response.Content.ReadAsStringAsync();
+
+                 products = JsonConvert.DeserializeObject<List<Product>>(contet);
             }
             else
             {
                 //log
             }
 
-            return View();
+            return View(products);
         }
     }
 }
