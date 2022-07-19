@@ -32,6 +32,9 @@ namespace IdentityServer.API2
                 opts.Audience = "resource_api2";
             });
 
+            
+
+
 
             services.AddControllers();
             services.AddSwaggerGen(c =>

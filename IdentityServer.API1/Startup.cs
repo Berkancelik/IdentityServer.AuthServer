@@ -33,6 +33,20 @@ namespace IdentityServer.API1
                 opts.Audience = "resource_api1";
             });
 
+            services.AddAuthorization(opts =>
+            {
+                opts.AddPolicy("ReadProduct", policy =>
+                {
+                    policy.RequireClaim("scope", "api1.read");
+                });
+
+                opts.AddPolicy("UpdaOrCreate", policy =>
+                {
+                    policy.RequireClaim("scope", new[] { "api1.read", "api1.create" });
+                });
+            });
+
+
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {

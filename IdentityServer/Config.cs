@@ -38,15 +38,15 @@ namespace IdentityServer.AuthServer
             return new List<Client>(){
                 new Client()
                 {
-                    ClientId = "Client1",//Sha256 : hashlenmiş bir şekidle tutmamız gerekmektedir.
+                    ClientId = "Client1",
                     ClientName="Client 1 api uygulaması",
                     ClientSecrets = new[]{new Secret("secret".Sha256())},
                 AllowedGrantTypes=GrantTypes.ClientCredentials,
-                AllowedScopes={"api1.read" }
+                AllowedScopes={"api1.read", "api1.update" }
                 },
                 new Client()
                 {
-                    ClientId = "Client2",//Sha256 : hashlenmiş bir şekidle tutmamız gerekmektedir.
+                    ClientId = "Client2",
                     ClientName="Client 2 app uygulaması",
                     ClientSecrets = new[]{new Secret("secret".Sha256())},
                 AllowedGrantTypes=GrantTypes.ClientCredentials,
