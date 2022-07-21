@@ -92,8 +92,8 @@ namespace IdentityServer.AuthServer
                     ClientName="Client 1 Mvc app uygulaması",
                     ClientSecrets = new[]{new Secret("secret".Sha256())},
                     AllowedGrantTypes = GrantTypes.Hybrid,
-
                     RedirectUris = new List<string>{ "https://localhost:5006/signin-oidc" },
+                    PostLogoutRedirectUris=new List<string>{ "https://localhost:5006/signout-callback-oidc" },
                     AllowedScopes = {IdentityServerConstants.StandardScopes.OpenId,
                     IdentityServerConstants.StandardScopes.Profile,"api1.read",IdentityServerConstants.StandardScopes.OfflineAccess},
 

@@ -1,5 +1,7 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 
 namespace IdentityServer.Client1.Controllers
 {
@@ -10,6 +12,13 @@ namespace IdentityServer.Client1.Controllers
         {
             
             return View();
+        }
+
+        public async Task LogOut()
+        {
+            await HttpContext.SignOutAsync("Cookies");
+
+            await HttpContext.SignOutAsync("oidc");
         }
     }
 }
