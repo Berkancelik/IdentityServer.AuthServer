@@ -101,7 +101,12 @@ namespace IdentityServer.AuthServer
                 RefreshTokenUsage =TokenUsage.ReUse,
                 RefreshTokenExpiration =TokenExpiration.Absolute,
                 AbsoluteRefreshTokenLifetime=(int)(DateTime.Now.AddDays(60)-DateTime.Now).TotalSeconds,
-                AllowOfflineAccess =true
+                AllowOfflineAccess =true,
+
+                RequireConsent=true
+
+
+                
                 }
             };
         }
