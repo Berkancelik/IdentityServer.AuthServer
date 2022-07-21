@@ -97,9 +97,10 @@ namespace IdentityServer.AuthServer
                     AllowedScopes = {IdentityServerConstants.StandardScopes.OpenId,
                     IdentityServerConstants.StandardScopes.Profile,"api1.read",IdentityServerConstants.StandardScopes.OfflineAccess},
 
-                       AccessTokenLifetime=DateTime.Now.AddHours(2).Second,
+                       AccessTokenLifetime=2*60*60,
                 RefreshTokenUsage =TokenUsage.ReUse,
-                AbsoluteRefreshTokenLifetime=DateTime.Now.AddDays(60).Second,
+                RefreshTokenExpiration =TokenExpiration.Absolute,
+                AbsoluteRefreshTokenLifetime=(int)(DateTime.Now.AddDays(60)-DateTime.Now).TotalSeconds,
                 AllowOfflineAccess =true
                 }
             };
