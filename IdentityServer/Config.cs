@@ -81,7 +81,9 @@ namespace IdentityServer.AuthServer
                     ClientName="Client 2 app uygulaması",
                     ClientSecrets = new[]{new Secret("secret".Sha256())},
                 AllowedGrantTypes=GrantTypes.ClientCredentials,
-                AllowedScopes={"api1.read","api2.write", "api2.update" }
+                AllowedScopes={"api1.read","api2.write", "api2.update" },
+
+
                 },
                 new Client
                 {
@@ -90,10 +92,15 @@ namespace IdentityServer.AuthServer
                     ClientName="Client 1 Mvc app uygulaması",
                     ClientSecrets = new[]{new Secret("secret".Sha256())},
                     AllowedGrantTypes = GrantTypes.Hybrid,
-              
+
                     RedirectUris = new List<string>{ "https://localhost:5006/signin-oidc" },
                     AllowedScopes = {IdentityServerConstants.StandardScopes.OpenId,
-                    IdentityServerConstants.StandardScopes.Profile,"api1.read"}
+                    IdentityServerConstants.StandardScopes.Profile,"api1.read",IdentityServerConstants.StandardScopes.OfflineAccess},
+
+                       AccessTokenLifetime=DateTime.Now.AddHours(2).Second,
+                RefreshTokenUsage =TokenUsage.ReUse,
+                AbsoluteRefreshTokenLifetime=DateTime.Now.AddDays(60).Second,
+                AllowOfflineAccess =true
                 }
             };
         }
