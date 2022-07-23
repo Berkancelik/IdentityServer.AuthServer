@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -39,6 +40,10 @@ namespace IdentityServer.Client1
                 opts.SaveTokens = true;
                 opts.Scope.Add("api1.read");
                 opts.Scope.Add("offline_access");
+                opts.Scope.Add("CountryAndCity");
+
+                opts.ClaimActions.MapUniqueJsonKey("country", "country");
+                opts.ClaimActions.MapUniqueJsonKey("city", "city");
             });
 
 

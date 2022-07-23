@@ -45,8 +45,10 @@ namespace IdentityServer.AuthServer
         {
             return new List<IdentityResource>()
             {
-                new IdentityResources.OpenId(),
+                new IdentityResources.OpenId(),//subId
                 new IdentityResources.Profile(),
+                new IdentityResource(){Name = "CountryAndCity",DisplayName="Country nad City",Description="Kullanıcının ülke ve şehir bilgisi",
+                UserClaims=new []{"country","city"} }
             };
         }
 
@@ -55,11 +57,15 @@ namespace IdentityServer.AuthServer
             return new List<TestUser>() {
                 new TestUser{SubjectId ="1", Username="Berkancelik",Password= "password",Claims= new List<Claim>(){
                 new Claim("given_name","Berkan"),
-                new Claim("family_name","Çelik")
+                new Claim("family_name","Çelik"),
+                new Claim("country","Türkiye"),
+                new Claim("city","Ardahan")
                 }},
                   new TestUser{SubjectId ="2", Username="Ahmetselim",Password= "password",Claims= new List<Claim>(){
                 new Claim("given_name","Ahmet"),
-                new Claim("family_name","Selim")
+                new Claim("family_name","Selim"),
+                       new Claim("country","Türkiye"),
+                new Claim("city","Idtanbulk")
                 }}
             };
         }
@@ -95,7 +101,7 @@ namespace IdentityServer.AuthServer
                     RedirectUris = new List<string>{ "https://localhost:5006/signin-oidc" },
                     PostLogoutRedirectUris=new List<string>{ "https://localhost:5006/signout-callback-oidc" },
                     AllowedScopes = {IdentityServerConstants.StandardScopes.OpenId,
-                    IdentityServerConstants.StandardScopes.Profile,"api1.read",IdentityServerConstants.StandardScopes.OfflineAccess},
+                    IdentityServerConstants.StandardScopes.Profile,"api1.read",IdentityServerConstants.StandardScopes.OfflineAccess,"CountyAndCity"},
 
                        AccessTokenLifetime=2*60*60,
                 RefreshTokenUsage =TokenUsage.ReUse,
@@ -106,7 +112,7 @@ namespace IdentityServer.AuthServer
                 RequireConsent=true
 
 
-                
+
                 }
             };
         }
