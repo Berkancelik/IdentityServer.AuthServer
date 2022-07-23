@@ -24,7 +24,7 @@ namespace IdentityServer.Client1
                 opts.DefaultChallengeScheme = "oidc";
             }).AddCookie("Cookies", opts =>
             {
-                opts.AccessDeniedPath = "Home/AccessDenied";
+                opts.AccessDeniedPath = "/Home/AccessDenied";
             }).AddOpenIdConnect("oidc", opts =>
             {
                 opts.SignInScheme = "Cookies";

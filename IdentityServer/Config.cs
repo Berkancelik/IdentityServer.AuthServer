@@ -110,13 +110,35 @@ namespace IdentityServer.AuthServer
                 RefreshTokenUsage =TokenUsage.ReUse,
                 RefreshTokenExpiration =TokenExpiration.Absolute,
                 AbsoluteRefreshTokenLifetime=(int)(DateTime.Now.AddDays(60)-DateTime.Now).TotalSeconds,
-                AllowOfflineAccess =true,
 
-                RequireConsent=true
+                RequireConsent=false
+
+
+
+                },
+                                new Client
+                {
+                       ClientId = "Client2-Mvc",
+                       RequirePkce= false,
+                    ClientName="Client 2 Mvc app uygulaması",
+                    ClientSecrets = new[]{new Secret("secret".Sha256())},
+                    AllowedGrantTypes = GrantTypes.Hybrid,
+                    RedirectUris = new List<string>{ "https://localhost:5011/signin-oidc" },
+                    PostLogoutRedirectUris=new List<string>{ "https://localhost:5011/signout-callback-oidc" },
+                    AllowedScopes = {IdentityServerConstants.StandardScopes.OpenId,
+                    IdentityServerConstants.StandardScopes.Profile,"api1.read",IdentityServerConstants.StandardScopes.OfflineAccess,"CountyAndCity","Roles"},
+
+                       AccessTokenLifetime=2*60*60,
+                RefreshTokenUsage =TokenUsage.ReUse,
+                RefreshTokenExpiration =TokenExpiration.Absolute,
+                AbsoluteRefreshTokenLifetime=(int)(DateTime.Now.AddDays(60)-DateTime.Now).TotalSeconds,
+
+                RequireConsent=false
 
 
 
                 }
+
             };
         }
 
