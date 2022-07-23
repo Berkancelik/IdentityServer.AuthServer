@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 
 namespace IdentityServer.Client1.Controllers
 {
+    [Authorize]
     public class UserController : Controller
     {
         private readonly IConfiguration _configuration;
@@ -75,6 +76,18 @@ namespace IdentityServer.Client1.Controllers
             await HttpContext.SignInAsync("Cookies", authenticationResult.Principal, properties);
 
             return RedirectToAction("Index");
+        }
+
+        [Authorize(Roles ="admin")]
+        public IActionResult AdminAction()
+        {
+            return View();
+        }
+
+        [Authorize(Roles = "customer,admin")]
+        public IActionResult CustomerAction()
+        {
+            return View();
         }
 
     }
