@@ -1,7 +1,10 @@
 ﻿using IdentityModel.Client;
 using IdentityServer.Client1.Models;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Net.Http;
@@ -9,6 +12,7 @@ using System.Threading.Tasks;
 
 namespace IdentityServer.Client1.Controllers
 {
+    [Authorize]
     public class ProductsController : Controller
     {
         private readonly IConfiguration _configuration;
@@ -23,26 +27,10 @@ namespace IdentityServer.Client1.Controllers
             List<Product> products = new List<Product>();
             HttpClient httpClient = new HttpClient();
 
-            var disco = await httpClient.GetDiscoveryDocumentAsync("https://localhost:5001");
+            var accesstoken = await HttpContext.GetTokenAsync(OpenIdConnectParameterNames.AccessToken);
 
-            if (disco.IsError)
-            {
-                //log
-            }
-            ClientCredentialsTokenRequest clientCredentialsTokenRequest = new ClientCredentialsTokenRequest();
 
-            clientCredentialsTokenRequest.ClientId = _configuration["Client:ClientId"];
-            clientCredentialsTokenRequest.ClientSecret = _configuration["Client:ClientSecret"];
-            // adres discovery üzerinden gelecek
-            clientCredentialsTokenRequest.Address = disco.TokenEndpoint;
-
-            var token = await httpClient.RequestClientCredentialsTokenAsync(clientCredentialsTokenRequest);
-            if (disco.IsError)
-            {
-                //log
-            }
-            // sen bana token ver ben onu ilgili isteğin header'ına ekleyeceğim anlamını taşımaktadır.
-            httpClient.SetBearerToken(token.AccessToken);
+            httpClient.SetBearerToken(accesstoken);
 
             var response = await httpClient.GetAsync("https://localhost:5016/api/products/getproducts");
 
