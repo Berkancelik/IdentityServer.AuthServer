@@ -18,6 +18,14 @@ namespace IdentityServer.Client1.Controllers
             _logger = logger;
         }
 
+
+
+        public IActionResult AccessDenied( string ReturnUrl)
+        {
+            ViewBag.url = ReturnUrl;
+            return View();
+        }
+
         public IActionResult Index()
         {
             return View();
