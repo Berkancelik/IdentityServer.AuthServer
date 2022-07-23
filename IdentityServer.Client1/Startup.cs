@@ -1,3 +1,4 @@
+using IdentityServer.Client1.Services;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -18,6 +19,11 @@ namespace IdentityServer.Client1
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddHttpContextAccessor();
+            services.AddScoped<IApiResourceHttpClient, ApiResourceHttpClient>();
+
+
+
             services.AddAuthentication(opts =>
             {
                 opts.DefaultScheme = "Cookies";
@@ -60,7 +66,7 @@ namespace IdentityServer.Client1
             else
             {
                 app.UseExceptionHandler("/Home/Error");
-          
+
                 app.UseHsts();
             }
             app.UseHttpsRedirection();
