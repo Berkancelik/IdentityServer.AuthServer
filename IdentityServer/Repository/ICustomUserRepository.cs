@@ -1,7 +1,7 @@
 ﻿using IdentityServer.AuthServer.Models;
 using System.Threading.Tasks;
 
-namespace IdentityServer.AuthServer.Services
+namespace IdentityServer.AuthServer.Repository
 {
     public interface ICustomUserRepository
     {
