@@ -44,7 +44,7 @@ namespace IdentityServer.AuthServer
         public static IEnumerable<IdentityResource> GetIdentityResources()
         {
             return new List<IdentityResource>()
-            {
+            {new IdentityResources.Email(),
                 new IdentityResources.OpenId(),//subId
                 new IdentityResources.Profile(),
                 new IdentityResource(){Name = "CountryAndCity",DisplayName="Country nad City",Description="Kullanıcının ülke ve şehir bilgisi",
@@ -103,7 +103,7 @@ namespace IdentityServer.AuthServer
                     AllowedGrantTypes = GrantTypes.Hybrid,
                     RedirectUris = new List<string>{ "https://localhost:5006/signin-oidc" },
                     PostLogoutRedirectUris=new List<string>{ "https://localhost:5006/signout-callback-oidc" },
-                    AllowedScopes = {IdentityServerConstants.StandardScopes.OpenId,
+                    AllowedScopes = {IdentityServerConstants.StandardScopes.Email,IdentityServerConstants.StandardScopes.OpenId,
                     IdentityServerConstants.StandardScopes.Profile,"api1.read",IdentityServerConstants.StandardScopes.OfflineAccess,"CountyAndCity","Roles"},
 
                        AccessTokenLifetime=2*60*60,
