@@ -1,6 +1,5 @@
 ﻿using IdentityServer.AuthServer.Models;
 using Microsoft.EntityFrameworkCore;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace IdentityServer.AuthServer.Repository
