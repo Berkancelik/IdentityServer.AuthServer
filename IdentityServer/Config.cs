@@ -23,7 +23,6 @@ namespace IdentityServer.AuthServer
                     ApiSecrets = new[] { new Secret("secretapi2".Sha256()) } } };
         }
 
-
         public static IEnumerable<ApiScope> GetApiScopes()
         {
             return new List<ApiScope>()
@@ -39,7 +38,6 @@ namespace IdentityServer.AuthServer
 
             };
         }
-
 
         public static IEnumerable<IdentityResource> GetIdentityResources()
         {
@@ -116,7 +114,7 @@ namespace IdentityServer.AuthServer
 
 
                 },
-                                new Client
+                new Client
                 {
                        ClientId = "Client2-Mvc",
                        RequirePkce= false,
@@ -137,7 +135,26 @@ namespace IdentityServer.AuthServer
 
 
 
+                },
+                new Client
+                {
+                       ClientId = "Client1-ResourceOwner-Mvc",
+                    ClientName="Client 1  app uygulaması",
+                    ClientSecrets = new[]{new Secret("secret".Sha256())},
+                    AllowedGrantTypes = GrantTypes.ResourceOwnerPassword,
+                    AllowedScopes = {IdentityServerConstants.StandardScopes.OpenId,
+                    IdentityServerConstants.StandardScopes.Profile,"api1.read",IdentityServerConstants.StandardScopes.OfflineAccess,"CountyAndCity","Roles"},
+
+                       AccessTokenLifetime=2*60*60,
+                RefreshTokenUsage =TokenUsage.ReUse,
+                RefreshTokenExpiration =TokenExpiration.Absolute,
+                AbsoluteRefreshTokenLifetime=(int)(DateTime.Now.AddDays(60)-DateTime.Now).TotalSeconds,
+
+
+
+
                 }
+
 
             };
         }
