@@ -6,6 +6,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Net.Http;
 using System.Threading.Tasks;
 
@@ -64,7 +65,7 @@ namespace IdentityServer.Client1.Controllers
                 new AuthenticationToken{Name = OpenIdConnectParameterNames.IdToken, Value=token.IdentityToken},
                 new AuthenticationToken(){Name = OpenIdConnectParameterNames.RefreshToken, Value=token.RefreshToken},
                 new AuthenticationToken{Name = OpenIdConnectParameterNames.RefreshToken,Value = token.RefreshToken},
-                new AuthenticationToken{Name = OpenIdConnectParameterNames.ExpiresIn,Value = DateTime.UtcNow.AddSeconds(token.ExpiresIn).ToString("o") }
+                new AuthenticationToken{Name = OpenIdConnectParameterNames.ExpiresIn,Value = DateTime.UtcNow.AddSeconds(token.ExpiresIn).ToString("o",CultureInfo.InvariantCulture) }
             };
 
             var authenticationResult = await HttpContext.AuthenticateAsync();
