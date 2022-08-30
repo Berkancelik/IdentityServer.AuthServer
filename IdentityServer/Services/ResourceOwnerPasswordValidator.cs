@@ -1,13 +1,28 @@
-﻿using IdentityServer4.Validation;
+﻿using IdentityModel;
+using IdentityServer.AuthServer.Repository;
+using IdentityServer4.Validation;
 using System.Threading.Tasks;
 
 namespace IdentityServer.AuthServer.Services
 {
     public class ResourceOwnerPasswordValidator : IResourceOwnerPasswordValidator
     {
-        public Task ValidateAsync(ResourceOwnerPasswordValidationContext context)
+        private readonly ICustomUserRepository _customUserRepository;
+
+        public ResourceOwnerPasswordValidator(ICustomUserRepository customUserRepository)
         {
-            throw new System.NotImplementedException();
+            _customUserRepository = customUserRepository;
+        }
+
+        public async Task ValidateAsync(ResourceOwnerPasswordValidationContext context)
+        {
+            var isUser = await _customUserRepository.Validate(context.UserName, context.Password);
+            if (isUser)
+            {
+                var user = await _customUserRepository.FindByEmail(context.UserName);
+
+                context.Result = new GrantValidationResult(user.Id.ToString(), OidcConstants.AuthenticationMethods.Password);
+            }
         }
     }
 }
