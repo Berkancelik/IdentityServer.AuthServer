@@ -79,9 +79,9 @@ namespace IdentityServer.Client1.Controllers
                 new AuthenticationToken{Name = OpenIdConnectParameterNames.ExpiresIn,Value = DateTime.UtcNow.AddSeconds
                 (token.ExpiresIn).ToString("o",CultureInfo.InvariantCulture) } });
 
-            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, claimsPrincipal);
+            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, claimsPrincipal,authenticationProperties);
 
-            return RedirectToAction("User", "Index");
+            return RedirectToAction("Index","User");
         }
     }
 }
