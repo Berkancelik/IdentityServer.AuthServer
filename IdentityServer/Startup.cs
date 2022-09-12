@@ -4,9 +4,11 @@ using IdentityServer.AuthServer.Repository;
 using IdentityServer.AuthServer.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using System.Reflection;
 
 namespace IdentityServer
 {
@@ -17,11 +19,23 @@ namespace IdentityServer
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddScoped<ICustomUserRepository,CustomUserRepository >();
+            services.AddScoped<ICustomUserRepository, CustomUserRepository>();
             services.AddDbContext<CustomDbContext>();
 
+            services.AddDbContext<CustomDbContext>(options =>
+            {
+                options.UseSqlServer(Configuration.GetConnectionString("LocalDb"));
+            });
+            var assemblyName = typeof(Startup).Assembly.GetName().Name;
 
-            services.AddIdentityServer()
+            services.AddIdentityServer().AddConfigurationStore(opts =>
+            {
+                opts.ConfigureDbContext = c => c.UseSqlServer(Configuration.GetConnectionString("LocalDb"), sqlopts => sqlopts.MigrationsAssembly(assemblyName));
+            }).AddOperationalStore(opts =>
+            {
+                opts.ConfigureDbContext = c => c.UseSqlServer(Configuration.GetConnectionString("LocalDb"), sqlopts => sqlopts.MigrationsAssembly(assemblyName));
+            })
+                .AddConfigurationStore()
                 .AddInMemoryApiResources(Config.GetApiResources())
                 .AddInMemoryApiScopes(Config.GetApiScopes())
                 .AddInMemoryClients(Config.GetClients())
@@ -30,7 +44,9 @@ namespace IdentityServer
                 .AddProfileService<AuthServer.Services.CustomProfileService>()
                 .AddDeveloperSigningCredential()
                 .AddResourceOwnerValidator<ResourceOwnerPasswordValidator>();
-            
+
+            var assamblyName = typeof(Startup).GetTypeInfo().Assembly.GetName().Name;
+
 
             services.AddControllersWithViews();
         }
