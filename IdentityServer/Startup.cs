@@ -14,39 +14,32 @@ namespace IdentityServer
 {
     public class Startup
     {
+        public Startup(IConfiguration configuration)
+        {
+            Configuration = configuration;
+        }
+
         public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddScoped<ICustomUserRepository, CustomUserRepository>();
-            services.AddDbContext<CustomDbContext>();
 
-            services.AddDbContext<CustomDbContext>(options =>
+            services.AddDbContext<CustomDbContext>(option =>
             {
-                options.UseSqlServer(Configuration.GetConnectionString("LocalDb"));
+                option.UseSqlServer(Configuration.GetConnectionString("LocalDb"));
             });
-            var assemblyName = typeof(Startup).Assembly.GetName().Name;
 
-            services.AddIdentityServer().AddConfigurationStore(opts =>
-            {
-                opts.ConfigureDbContext = c => c.UseSqlServer(Configuration.GetConnectionString("LocalDb"), sqlopts => sqlopts.MigrationsAssembly(assemblyName));
-            }).AddOperationalStore(opts =>
-            {
-                opts.ConfigureDbContext = c => c.UseSqlServer(Configuration.GetConnectionString("LocalDb"), sqlopts => sqlopts.MigrationsAssembly(assemblyName));
-            })
-                .AddConfigurationStore()
+            services.AddIdentityServer()
                 .AddInMemoryApiResources(Config.GetApiResources())
                 .AddInMemoryApiScopes(Config.GetApiScopes())
                 .AddInMemoryClients(Config.GetClients())
                 .AddInMemoryIdentityResources(Config.GetIdentityResources())
-                //.AddTestUsers(Config.GetUsers().ToList())
-                .AddProfileService<AuthServer.Services.CustomProfileService>()
+                //      .AddTestUsers(Config.GetUsers().ToList())
                 .AddDeveloperSigningCredential()
+                .AddProfileService<CustomProfileService>()
                 .AddResourceOwnerValidator<ResourceOwnerPasswordValidator>();
-
-            var assamblyName = typeof(Startup).GetTypeInfo().Assembly.GetName().Name;
-
 
             services.AddControllersWithViews();
         }
@@ -70,7 +63,6 @@ namespace IdentityServer
             app.UseRouting();
             app.UseIdentityServer();
             app.UseAuthorization();
-
 
             app.UseEndpoints(endpoints =>
             {
