@@ -30,8 +30,20 @@ namespace IdentityServer
             {
                 option.UseSqlServer(Configuration.GetConnectionString("LocalDb"));
             });
+            var assemblyName = typeof(Startup).GetTypeInfo().Assembly.GetName().Name;
+
+
 
             services.AddIdentityServer()
+                .AddConfigurationStore(opts =>
+                {
+                    opts.ConfigureDbContext = c => c.UseSqlServer(Configuration.GetConnectionString("LocalDb"), sqlopts => sqlopts.MigrationsAssembly(assemblyName));
+                })
+                   .AddOperationalStore(opts =>
+                   {
+                       opts.ConfigureDbContext = c => c.UseSqlServer(Configuration.GetConnectionString("LocalDb"), sqlopts => sqlopts.MigrationsAssembly(assemblyName));
+                   })
+
                 .AddInMemoryApiResources(Config.GetApiResources())
                 .AddInMemoryApiScopes(Config.GetApiScopes())
                 .AddInMemoryClients(Config.GetClients())
