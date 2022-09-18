@@ -56,24 +56,6 @@ namespace IdentityServer_IdentityAPI.AuthServer
             };
         }
 
-        public static IEnumerable<TestUser> GetUsers()
-        {
-            return new List<TestUser>() {
-                new TestUser{SubjectId ="1", Username="Berkancelik",Password= "password",Claims= new List<Claim>(){
-                new Claim("given_name","Berkan"),
-                new Claim("family_name","Çelik"),
-                new Claim("country","Türkiye"),
-                new Claim("city","Ardahan"),
-                new Claim("role","admin")
-                }},
-                  new TestUser{SubjectId ="2", Username="Ahmetselim",Password= "password",Claims= new List<Claim>(){
-                new Claim("given_name","Ahmet"),
-                new Claim("family_name","Selim"),
-                       new Claim("country","Türkiye"),
-                new Claim("city","Idtanbulk")
-                }}
-            };
-        }
 
         public static IEnumerable<Client> GetClients()
         {
