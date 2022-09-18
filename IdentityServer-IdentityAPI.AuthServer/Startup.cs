@@ -69,6 +69,8 @@ namespace IdentityServer_IdentityAPI.AuthServer
                 });
         }
 
+
+        // migration Errror 
         public void Configure(IApplicationBuilder app)
         {
             if (Environment.IsDevelopment())
