@@ -2,57 +2,146 @@
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 
+using IdentityServer4;
 using IdentityServer4.Models;
+using IdentityServer4.Test;
+using System;
 using System.Collections.Generic;
+using System.Security.Claims;
 
 namespace IdentityServer_IdentityAPI.AuthServer
 {
     public static class Config
     {
-        public static IEnumerable<IdentityResource> IdentityResources =>
-                   new IdentityResource[]
-                   {
-                new IdentityResources.OpenId(),
+        public static IEnumerable<ApiResource> GetApiResources()
+        {
+            return new List<ApiResource>()
+            {
+                new ApiResource("resource_api1") { Scopes = { "api1.read", "api1.write", "api1.update" },
+                    ApiSecrets = new[] { new Secret("secretapi1".Sha256()) } },
+
+
+                new ApiResource("resource_api2") { Scopes = { "api2.read", "api2.write", "api2.update" },
+                    ApiSecrets = new[] { new Secret("secretapi2".Sha256()) } } };
+        }
+
+
+        public static IEnumerable<ApiScope> GetApiScopes()
+        {
+            return new List<ApiScope>()
+            {
+                new ApiScope("api1.read","API 1 için okuma izni"),
+                new ApiScope("api1.write","API 1 için yazma izni"),
+                new ApiScope("api1.update","API 1 için güncelleme izni"),
+
+                new ApiScope("api2.read","API 1 için okuma izni"),
+                new ApiScope("api2.write","API 1 için yazma izni"),
+                new ApiScope("api2.update","API 1 için güncelleme izni"),
+
+
+            };
+        }
+
+
+        public static IEnumerable<IdentityResource> GetIdentityResources()
+        {
+            return new List<IdentityResource>()
+            {
+                new IdentityResources.OpenId(),//subId
                 new IdentityResources.Profile(),
-                   };
+                new IdentityResource(){Name = "CountryAndCity",DisplayName="Country nad City",Description="Kullanıcının ülke ve şehir bilgisi",
+                UserClaims=new []{"country","city"} },
 
-        public static IEnumerable<ApiScope> ApiScopes =>
-            new ApiScope[]
-            {
-                new ApiScope("scope1"),
-                new ApiScope("scope2"),
+                new IdentityResource(){Name="Roles", DisplayName="Roles",Description="Kullanıcı Rolleri", UserClaims=new[]{"role"} }
             };
+        }
 
-        public static IEnumerable<Client> Clients =>
-            new Client[]
-            {
-                // m2m client credentials flow client
+        public static IEnumerable<TestUser> GetUsers()
+        {
+            return new List<TestUser>() {
+                new TestUser{SubjectId ="1", Username="Berkancelik",Password= "password",Claims= new List<Claim>(){
+                new Claim("given_name","Berkan"),
+                new Claim("family_name","Çelik"),
+                new Claim("country","Türkiye"),
+                new Claim("city","Ardahan"),
+                new Claim("role","admin")
+                }},
+                  new TestUser{SubjectId ="2", Username="Ahmetselim",Password= "password",Claims= new List<Claim>(){
+                new Claim("given_name","Ahmet"),
+                new Claim("family_name","Selim"),
+                       new Claim("country","Türkiye"),
+                new Claim("city","Idtanbulk")
+                }}
+            };
+        }
+
+        public static IEnumerable<Client> GetClients()
+        {
+            return new List<Client>(){
+                new Client()
+                {
+                    ClientId = "Client1",
+                    ClientName="Client 1 api uygulaması",
+                    ClientSecrets = new[]{new Secret("secret".Sha256())},
+                AllowedGrantTypes=GrantTypes.ClientCredentials,
+                AllowedScopes={"api1.read", "api1.update" }
+                },
+                new Client()
+                {
+                    ClientId = "Client2",
+                    ClientName="Client 2 app uygulaması",
+                    ClientSecrets = new[]{new Secret("secret".Sha256())},
+                AllowedGrantTypes=GrantTypes.ClientCredentials,
+                AllowedScopes={"api1.read","api2.write", "api2.update" },
+
+
+                },
                 new Client
                 {
-                    ClientId = "m2m.client",
-                    ClientName = "Client Credentials Client",
+                       ClientId = "Client1-Mvc",
+                       RequirePkce= false,
+                    ClientName="Client 1 Mvc app uygulaması",
+                    ClientSecrets = new[]{new Secret("secret".Sha256())},
+                    AllowedGrantTypes = GrantTypes.Hybrid,
+                    RedirectUris = new List<string>{ "https://localhost:5006/signin-oidc" },
+                    PostLogoutRedirectUris=new List<string>{ "https://localhost:5006/signout-callback-oidc" },
+                    AllowedScopes = {IdentityServerConstants.StandardScopes.OpenId,
+                    IdentityServerConstants.StandardScopes.Profile,"api1.read",IdentityServerConstants.StandardScopes.OfflineAccess,"CountyAndCity","Roles"},
 
-                    AllowedGrantTypes = GrantTypes.ClientCredentials,
-                    ClientSecrets = { new Secret("511536EF-F270-4058-80CA-1C89C192F69A".Sha256()) },
+                       AccessTokenLifetime=2*60*60,
+                RefreshTokenUsage =TokenUsage.ReUse,
+                RefreshTokenExpiration =TokenExpiration.Absolute,
+                AbsoluteRefreshTokenLifetime=(int)(DateTime.Now.AddDays(60)-DateTime.Now).TotalSeconds,
 
-                    AllowedScopes = { "scope1" }
+                RequireConsent=false
+
+
+
                 },
-
-                // interactive client using code flow + pkce
-                new Client
+                                new Client
                 {
-                    ClientId = "interactive",
-                    ClientSecrets = { new Secret("49C1A7E1-0C79-4A89-A3D6-A37998FB86B0".Sha256()) },
+                       ClientId = "Client2-Mvc",
+                       RequirePkce= false,
+                    ClientName="Client 2 Mvc app uygulaması",
+                    ClientSecrets = new[]{new Secret("secret".Sha256())},
+                    AllowedGrantTypes = GrantTypes.Hybrid,
+                    RedirectUris = new List<string>{ "https://localhost:5011/signin-oidc" },
+                    PostLogoutRedirectUris=new List<string>{ "https://localhost:5011/signout-callback-oidc" },
+                    AllowedScopes = {IdentityServerConstants.StandardScopes.OpenId,
+                    IdentityServerConstants.StandardScopes.Profile,"api1.read",IdentityServerConstants.StandardScopes.OfflineAccess,"CountyAndCity","Roles"},
 
-                    AllowedGrantTypes = GrantTypes.Code,
+                       AccessTokenLifetime=2*60*60,
+                RefreshTokenUsage =TokenUsage.ReUse,
+                RefreshTokenExpiration =TokenExpiration.Absolute,
+                AbsoluteRefreshTokenLifetime=(int)(DateTime.Now.AddDays(60)-DateTime.Now).TotalSeconds,
 
-                    RedirectUris = { "https://localhost:44300/signin-oidc" },
-                    FrontChannelLogoutUri = "https://localhost:44300/signout-oidc",
-                    PostLogoutRedirectUris = { "https://localhost:44300/signout-callback-oidc" },
+                RequireConsent=false
 
-                    AllowOfflineAccess = true,
-                    AllowedScopes = { "openid", "profile", "scope2" }
-                },
+
+
+                }
+
             };
+        }
     }
 }
