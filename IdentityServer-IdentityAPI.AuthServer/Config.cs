@@ -19,10 +19,10 @@ namespace IdentityServer_IdentityAPI.AuthServer
             {
                 new ApiResource("resource_api1") { Scopes = { "api1.read", "api1.write", "api1.update" },
                     ApiSecrets = new[] { new Secret("secretapi1".Sha256()) } },
-
-
                 new ApiResource("resource_api2") { Scopes = { "api2.read", "api2.write", "api2.update" },
-                    ApiSecrets = new[] { new Secret("secretapi2".Sha256()) } } };
+                    ApiSecrets = new[] { new Secret("secretapi2".Sha256()) } },
+                new ApiResource(IdentityServerConstants.LocalApi.ScopeName)
+             };
         }
 
 
@@ -37,6 +37,7 @@ namespace IdentityServer_IdentityAPI.AuthServer
                 new ApiScope("api2.read","API 1 için okuma izni"),
                 new ApiScope("api2.write","API 1 için yazma izni"),
                 new ApiScope("api2.update","API 1 için güncelleme izni"),
+                new ApiScope(IdentityServerConstants.LocalApi.ScopeName)
 
 
             };
@@ -106,11 +107,11 @@ namespace IdentityServer_IdentityAPI.AuthServer
                        RequirePkce= false,
                     ClientName="Client 2 Mvc app uygulaması",
                     ClientSecrets = new[]{new Secret("secret".Sha256())},
-                    AllowedGrantTypes = GrantTypes.Hybrid,
+                    AllowedGrantTypes = GrantTypes.ResourceOwnerPasswordAndClientCredentials,
                     RedirectUris = new List<string>{ "https://localhost:5011/signin-oidc" },
-                    PostLogoutRedirectUris=new List<string>{ "https://localhost:5011/signout-callback-oidc" },
+                    PostLogoutRedirectUris=new List<string>{ "https://localhost:5011/signo ut-callback-oidc" },
                     AllowedScopes = {IdentityServerConstants.StandardScopes.OpenId,
-                    IdentityServerConstants.StandardScopes.Profile,"api1.read",IdentityServerConstants.StandardScopes.OfflineAccess,"CountyAndCity","Roles"},
+                    IdentityServerConstants.StandardScopes.Profile,"api1.read",IdentityServerConstants.StandardScopes.OfflineAccess,"CountyAndCity","Roles",IdentityServerConstants.LocalApi.ScopeName},
 
                        AccessTokenLifetime=2*60*60,
                 RefreshTokenUsage =TokenUsage.ReUse,
