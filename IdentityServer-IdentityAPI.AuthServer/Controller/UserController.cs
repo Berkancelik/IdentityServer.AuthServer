@@ -8,7 +8,7 @@ namespace IdentityServerIdentityAPI.AuthServer.Controller
     [Route("api/[controller]/[action]")]
     [ApiController]
     //clam base auth
-    [Authorize(LocalApi.PolicyName)]
+    [AllowAnonymous]
     public class UserController : ControllerBase
     {
         [HttpPost]
