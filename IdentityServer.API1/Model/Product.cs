@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace IdentityServer.API1.Model
+﻿namespace IdentityServer.API1.Model
 {
     public class Product
     {
