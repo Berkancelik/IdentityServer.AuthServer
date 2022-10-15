@@ -1,4 +1,6 @@
 ﻿using IdentityModel.Client;
+using IdentityServer.Client1.Models;
+using IdentityServer.Client1.Services;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -16,11 +18,14 @@ namespace IdentityServer.Client1.Controllers
     public class UserController : Controller
     {
         private readonly IConfiguration _configuration;
+        private readonly IApiResourceHttpClient _apiResourceHttpClient;
 
-        public UserController(IConfiguration configuration)
+        public UserController(IConfiguration configuration, IApiResourceHttpClient apiResourceHttpClient)
         {
             _configuration = configuration;
+            _apiResourceHttpClient = apiResourceHttpClient;
         }
+
         [Authorize]
         public IActionResult Index()
         {
@@ -28,7 +33,7 @@ namespace IdentityServer.Client1.Controllers
             return View();
         }
 
-        public async Task <IActionResult> LogOut()
+        public async Task<IActionResult> LogOut()
         {
             await HttpContext.SignOutAsync("Cookies");
 
@@ -81,7 +86,7 @@ namespace IdentityServer.Client1.Controllers
             return RedirectToAction("Index");
         }
 
-        [Authorize(Roles ="admin")]
+        [Authorize(Roles = "admin")]
         public IActionResult AdminAction()
         {
             return View();
@@ -93,5 +98,29 @@ namespace IdentityServer.Client1.Controllers
             return View();
         }
 
+        [HttpPost]
+        public async Task<IActionResult> SignUp(UserSaveViewModel userSaveViewModel)
+        {
+            if (!ModelState.IsValid) return View();
+
+            var result = await _apiResourceHttpClient.SaveUserViewModel(userSaveViewModel);
+
+            if (result != null)
+            {
+                result.ForEach(error =>
+                {
+                    ModelState.AddModelError("", error);
+                });
+
+                return View();
+            };
+
+            return RedirectToAction("Index");
+
+        }
+
+
     }
+
+
 }
